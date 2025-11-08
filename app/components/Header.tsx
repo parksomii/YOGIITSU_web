@@ -1,6 +1,6 @@
-'use client';
-import { useState, useEffect } from 'react';
-import Image from 'next/image';
+"use client";
+import { useState, useEffect } from "react";
+import Image from "next/image";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -10,8 +10,8 @@ export default function Header() {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 20);
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
@@ -19,11 +19,14 @@ export default function Header() {
       className={`
         fixed top-0 left-0 right-0 z-50 
         h-20
-        ${isScrolled ? 'bg-black shadow-lg' : 'bg-transparent'}
+        ${isScrolled ? "bg-black shadow-lg" : "bg-transparent"}
         transition-all duration-300
       `}
     >
-      <div className="w-full h-full flex items-center justify-between text-sm" style={{ paddingLeft: '40px', paddingRight: '40px' }}>
+      <div
+        className="w-full h-full flex items-center justify-between text-sm"
+        style={{ paddingLeft: "40px", paddingRight: "40px" }}
+      >
         {/* 로고 이미지 */}
         <div className="flex items-center">
           <Image
@@ -37,12 +40,15 @@ export default function Header() {
 
         {/* Desktop Menu */}
         <nav className="hidden md:flex items-center space-x-8">
-          
           <a
             href="#yogitsu"
             className="text-white font-normal tracking-tight transition-colors duration-200"
-            onMouseEnter={(e) => e.currentTarget.style.color = 'rgba(255, 255, 255, 0.9)'}
-            onMouseLeave={(e) => e.currentTarget.style.color = 'rgb(255, 255, 255)'}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.color = "rgba(255, 255, 255, 0.9)")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.color = "rgb(255, 255, 255)")
+            }
           >
             요기있수
           </a>
@@ -50,8 +56,12 @@ export default function Header() {
           <a
             href="#service"
             className="text-white font-normal tracking-tight transition-colors duration-200"
-            onMouseEnter={(e) => e.currentTarget.style.color = 'rgba(255, 255, 255, 0.9)'}
-            onMouseLeave={(e) => e.currentTarget.style.color = 'rgb(255, 255, 255)'}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.color = "rgba(255, 255, 255, 0.9)")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.color = "rgb(255, 255, 255)")
+            }
           >
             서비스
           </a>
@@ -59,8 +69,12 @@ export default function Header() {
           <a
             href="#review"
             className="text-white font-normal tracking-tight transition-colors duration-200"
-            onMouseEnter={(e) => e.currentTarget.style.color = 'rgba(255, 255, 255, 0.9)'}
-            onMouseLeave={(e) => e.currentTarget.style.color = 'rgb(255, 255, 255)'}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.color = "rgba(255, 255, 255, 0.9)")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.color = "rgb(255, 255, 255)")
+            }
           >
             리뷰
           </a>
@@ -68,8 +82,12 @@ export default function Header() {
           <a
             href="#team"
             className="text-white font-normal tracking-tight transition-colors duration-200"
-            onMouseEnter={(e) => e.currentTarget.style.color = 'rgba(255, 255, 255, 0.9)'}
-            onMouseLeave={(e) => e.currentTarget.style.color = 'rgb(255, 255, 255)'}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.color = "rgba(255, 255, 255, 0.9)")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.color = "rgb(255, 255, 255)")
+            }
           >
             팀소개
           </a>
@@ -77,15 +95,21 @@ export default function Header() {
           <a
             href="#download"
             className="text-white font-normal tracking-tight transition-colors duration-200"
-            onMouseEnter={(e) => e.currentTarget.style.color = 'rgba(255, 255, 255, 0.9)'}
-            onMouseLeave={(e) => e.currentTarget.style.color = 'rgb(255, 255, 255)'}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.color = "rgba(255, 255, 255, 0.9)")
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.color = "rgb(255, 255, 255)")
+            }
           >
             다운로드
           </a>
 
           <button
             className={`
-              ${isScrolled ? 'bg-blue-500 text-white' : 'bg-white text-blue-500'}
+              ${
+                isScrolled ? "bg-blue-500 text-white" : "bg-white text-blue-500"
+              }
               px-5.5 py-3.5 rounded-full font-normal text-xs
               hover:bg-opacity-90 transition-all duration-300 shadow-md
             `}
@@ -101,29 +125,55 @@ export default function Header() {
           aria-label="메뉴"
         >
           {isMenuOpen ? (
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
             </svg>
           ) : (
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16M4 18h16"
+              />
             </svg>
           )}
         </button>
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className={`
+          <div
+            className={`
             absolute top-full left-0 right-0 
-            ${isScrolled ? 'bg-black' : 'bg-black/95'}
+            ${isScrolled ? "bg-black" : "bg-black/95"}
             md:hidden shadow-lg
-          `}>
+          `}
+          >
             <nav className="flex flex-col p-4 space-y-4">
               <a
                 href="#yogitsu"
                 className="text-white font-normal tracking-tight transition-colors duration-200"
-                onMouseEnter={(e) => e.currentTarget.style.color = 'rgba(255, 255, 255, 0.9)'}
-                onMouseLeave={(e) => e.currentTarget.style.color = 'rgb(255, 255, 255)'}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.color = "rgba(255, 255, 255, 0.9)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.color = "rgb(255, 255, 255)")
+                }
                 onClick={() => setIsMenuOpen(false)}
               >
                 요기있수
@@ -132,8 +182,12 @@ export default function Header() {
               <a
                 href="#service"
                 className="text-white font-normal tracking-tight transition-colors duration-200"
-                onMouseEnter={(e) => e.currentTarget.style.color = 'rgba(255, 255, 255, 0.9)'}
-                onMouseLeave={(e) => e.currentTarget.style.color = 'rgb(255, 255, 255)'}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.color = "rgba(255, 255, 255, 0.9)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.color = "rgb(255, 255, 255)")
+                }
                 onClick={() => setIsMenuOpen(false)}
               >
                 서비스
@@ -142,8 +196,12 @@ export default function Header() {
               <a
                 href="#review"
                 className="text-white font-normal tracking-tight transition-colors duration-200"
-                onMouseEnter={(e) => e.currentTarget.style.color = 'rgba(255, 255, 255, 0.9)'}
-                onMouseLeave={(e) => e.currentTarget.style.color = 'rgb(255, 255, 255)'}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.color = "rgba(255, 255, 255, 0.9)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.color = "rgb(255, 255, 255)")
+                }
                 onClick={() => setIsMenuOpen(false)}
               >
                 리뷰
@@ -152,8 +210,12 @@ export default function Header() {
               <a
                 href="#team"
                 className="text-white font-normal tracking-tight transition-colors duration-200"
-                onMouseEnter={(e) => e.currentTarget.style.color = 'rgba(255, 255, 255, 0.9)'}
-                onMouseLeave={(e) => e.currentTarget.style.color = 'rgb(255, 255, 255)'}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.color = "rgba(255, 255, 255, 0.9)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.color = "rgb(255, 255, 255)")
+                }
                 onClick={() => setIsMenuOpen(false)}
               >
                 팀소개
@@ -162,8 +224,12 @@ export default function Header() {
               <a
                 href="#download"
                 className="text-white font-normal tracking-tight transition-colors duration-200"
-                onMouseEnter={(e) => e.currentTarget.style.color = 'rgba(255, 255, 255, 0.9)'}
-                onMouseLeave={(e) => e.currentTarget.style.color = 'rgb(255, 255, 255)'}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.color = "rgba(255, 255, 255, 0.9)")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.color = "rgb(255, 255, 255)")
+                }
                 onClick={() => setIsMenuOpen(false)}
               >
                 다운로드
@@ -171,7 +237,11 @@ export default function Header() {
 
               <button
                 className={`
-                  ${isScrolled ? 'bg-blue-500 text-white' : 'bg-white text-blue-500'}
+                  ${
+                    isScrolled
+                      ? "bg-blue-500 text-white"
+                      : "bg-white text-blue-500"
+                  }
                   px-4 py-2 rounded-full font-normal
                   hover:bg-opacity-90 transition-all duration-300 shadow-md w-full
                 `}
