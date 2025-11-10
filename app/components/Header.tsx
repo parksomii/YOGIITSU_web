@@ -28,13 +28,18 @@ export default function Header() {
         style={{ paddingLeft: "40px", paddingRight: "40px" }}
       >
         {/* 로고 이미지 */}
-        <div className="flex items-center">
+        <div
+          className="flex items-center"
+          style={{ width: "120px", height: "32px" }}
+        >
           <Image
             src="/yogitsu-logo.png"
             alt="Yogitsu Logo"
             width={120}
             height={40}
             className="h-8 w-auto"
+            priority
+            style={{ objectFit: "contain" }}
           />
         </div>
 
