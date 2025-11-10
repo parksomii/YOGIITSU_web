@@ -38,119 +38,134 @@ export default function Service() {
   const IMAGE_HEIGHT = 400;
 
   return (
-    <section
-      id="service"
-      className="bg-black text-white"
-      style={{
-        paddingTop: "120px",
-        paddingBottom: "120px",
-        borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
-      }}
-    >
-      <div
-        className="max-w-[1180px] mx-auto"
-        style={{ paddingLeft: "20px", paddingRight: "20px" }}
+    <>
+      <style>{`
+        @media (max-width: 768px) {
+          .service-main-title {
+            font-size: 24px !important;
+            line-height: 1.3 !important;
+          }
+          .service-sub-title {
+            font-size: 18px !important;
+            line-height: 1.3 !important;
+          }
+        }
+      `}</style>
+      <section
+        id="service"
+        className="bg-black text-white"
+        style={{
+          paddingTop: "120px",
+          paddingBottom: "120px",
+          borderBottom: "1px solid rgba(255, 255, 255, 0.1)",
+        }}
       >
-        <ScrollAnimation>
-          {/* Main Service 라벨 */}
-          <div className="text-center" style={{ marginBottom: "30px" }}>
-            <p
-              className="font-semibold"
-              style={{
-                color: "rgb(59, 130, 246)",
-                fontSize: "14px",
-                letterSpacing: "0.05em",
-              }}
-            >
-              Main Service
-            </p>
-          </div>
+        <div
+          className="max-w-[1180px] mx-auto"
+          style={{ paddingLeft: "20px", paddingRight: "20px" }}
+        >
+          <ScrollAnimation>
+            {/* Main Service 라벨 */}
+            <div className="text-center" style={{ marginBottom: "30px" }}>
+              <p
+                className="font-semibold"
+                style={{
+                  color: "rgb(59, 130, 246)",
+                  fontSize: "14px",
+                  letterSpacing: "0.05em",
+                }}
+              >
+                Main Service
+              </p>
+            </div>
 
-          {/* 메인 제목 */}
-          <div className="text-center" style={{ marginBottom: "10px" }}>
-            <h2
-              className="font-bold"
-              style={{
-                fontSize: "clamp(52px, 5vw, 48px)",
-                color: "rgb(255, 255, 255)",
-                lineHeight: "1.3",
-              }}
-            >
-              요기있수에 어떤 기능이 있는지 궁금하시다구요? 👀
-            </h2>
-          </div>
+            {/* 메인 제목 */}
+            <div className="text-center" style={{ marginBottom: "10px" }}>
+              <h2
+                className="font-bold service-main-title"
+                style={{
+                  fontSize: "clamp(52px, 5vw, 48px)",
+                  color: "rgb(255, 255, 255)",
+                  lineHeight: "1.3",
+                }}
+              >
+                <span style={{ color: "#3b82f6" }}>요기있수</span>에 어떤 기능이
+                있는지 궁금하시다구요? 👀
+              </h2>
+            </div>
 
-          {/* 서브 제목 */}
-          <div className="text-center" style={{ marginBottom: "130px" }}>
-            <p
-              className="font-bold"
-              style={{
-                fontSize: "clamp(40px, 4vw, 32px)",
-                color: "rgb(255, 255, 255)",
-                lineHeight: "1.3",
-              }}
-            >
-              캠퍼스 생활, 이제 요기있수 하나면 충분해요.
-            </p>
-          </div>
-        </ScrollAnimation>
+            {/* 서브 제목 */}
+            <div className="text-center" style={{ marginBottom: "130px" }}>
+              <p
+                className="font-bold service-sub-title"
+                style={{
+                  fontSize: "clamp(40px, 4vw, 32px)",
+                  color: "rgb(255, 255, 255)",
+                  lineHeight: "1.3",
+                }}
+              >
+                캠퍼스 생활, 이제 <span style={{ color: "#3b82f6" }}>요기있수</span> 하나면 충분해요!
+              </p>
+            </div>
+          </ScrollAnimation>
 
-        {/* 서비스 기능 카드들 */}
-        <div className="space-y-32">
-          {features.map((feature, index) => (
-            <ScrollAnimation key={index}>
-              <div className="flex flex-col">
-                {/* 텍스트 영역 */}
-                <div style={{ marginBottom: "80px" }}>
-                  <div style={{ marginBottom: "30px" }}>
-                    <p style={{ textAlign: "left" }}>
-                      <span style={{ fontSize: "18px" }}>
-                        <strong>
-                          <span style={{ color: "rgb(49, 130, 246)" }}>
-                            | {feature.tag}
-                          </span>
-                        </strong>
-                      </span>
+          {/* 서비스 기능 카드들 */}
+          <div className="space-y-32">
+            {features.map((feature, index) => (
+              <ScrollAnimation key={index}>
+                <div className="flex flex-col">
+                  {/* 텍스트 영역 */}
+                  <div style={{ marginBottom: "80px" }}>
+                    <div style={{ marginBottom: "30px" }}>
+                      <p style={{ textAlign: "left" }}>
+                        <span style={{ fontSize: "18px" }}>
+                          <strong>
+                            <span style={{ color: "rgb(49, 130, 246)" }}>
+                              | {feature.tag}
+                            </span>
+                          </strong>
+                        </span>
+                      </p>
+                    </div>
+                    <h3
+                      className="font-bold"
+                      style={{
+                        fontSize: "clamp(28px, 4vw, 40px)",
+                        color: "rgb(255, 255, 255)",
+                        lineHeight: "1.3",
+                        marginBottom: "24px",
+                      }}
+                    >
+                      {feature.title}
+                    </h3>
+                    <p
+                      style={{
+                        fontSize: "16px",
+                        color: "rgba(255, 255, 255, 0.7)",
+                        lineHeight: "1.7",
+                        whiteSpace: "pre-line",
+                      }}
+                    >
+                      {feature.description}
                     </p>
                   </div>
-                  <h3
-                    className="font-bold"
-                    style={{
-                      fontSize: "clamp(28px, 4vw, 40px)",
-                      color: "rgb(255, 255, 255)",
-                      lineHeight: "1.3",
-                      marginBottom: "24px",
-                    }}
-                  >
-                    {feature.title}
-                  </h3>
-                  <p
-                    style={{
-                      fontSize: "16px",
-                      color: "rgba(255, 255, 255, 0.7)",
-                      lineHeight: "1.7",
-                      whiteSpace: "pre-line",
-                    }}
-                  >
-                    {feature.description}
-                  </p>
-                </div>
 
-                {/* 이미지 영역 */}
-                <div className="w-full" style={{ marginBottom: "100px" }}>
-                  <Image
-                    src={feature.image}
-                    alt={feature.title}
-                    width={IMAGE_WIDTH}
-                    height={IMAGE_HEIGHT}
-                    className="w-full h-auto"
-                  />
+                  {/* 이미지 영역 */}
+                  <div className="w-full" style={{ marginBottom: "100px" }}>
+                    <Image
+                      src={feature.image}
+                      alt={feature.title}
+                      width={IMAGE_WIDTH}
+                      height={IMAGE_HEIGHT}
+                      className="w-full h-auto"
+                    />
+                  </div>
                 </div>
-              </div>
-            </ScrollAnimation>
-          ))}
+              </ScrollAnimation>
+            ))}
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+    </>
   );
 }
