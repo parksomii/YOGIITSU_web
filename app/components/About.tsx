@@ -52,8 +52,8 @@ export default function About() {
         className="max-w-[1180px] mx-auto"
         style={{ paddingLeft: "20px", paddingRight: "20px" }}
       >
-        <ScrollAnimation>
-          {/* About 라벨 */}
+        {/* About 라벨 */}
+        <ScrollAnimation delay={0}>
           <div className="text-center" style={{ marginBottom: "30px" }}>
             <p
               className="font-semibold"
@@ -66,8 +66,10 @@ export default function About() {
               About
             </p>
           </div>
+        </ScrollAnimation>
 
-          {/* 제목 */}
+        {/* 제목 */}
+        <ScrollAnimation delay={100}>
           <div className="text-center" style={{ marginBottom: "30px" }}>
             <h2
               className="font-bold"
@@ -80,8 +82,10 @@ export default function About() {
               캠퍼스 라이프의 변화, 요기있수가 만들어갑니다
             </h2>
           </div>
+        </ScrollAnimation>
 
-          {/* 설명 */}
+        {/* 설명 */}
+        <ScrollAnimation delay={200}>
           <div className="text-center" style={{ marginBottom: "60px" }}>
             <p
               style={{
@@ -90,87 +94,89 @@ export default function About() {
                 lineHeight: "1.6",
               }}
             >
-              길 찾기부터 정보 탐색까지, 요기있수는 학생들이 캠퍼스 생활을 보다 쉽고 즐겁게 누릴 수 있도록 탄생했습니다.
+              길 찾기부터 정보 탐색까지, 요기있수는 학생들이 캠퍼스 생활을 보다
+              쉽고 즐겁게 누릴 수 있도록 탄생했습니다.
               <br />
-              여러분의 `캠퍼스 길잡이`가 되어, 매일매일 더 빠르고 스마트한 학교생활을 돕고 있습니다.
+              여러분의 `캠퍼스 길잡이`가 되어, 매일매일 더 빠르고 스마트한
+              학교생활을 돕고 있습니다.
             </p>
           </div>
+        </ScrollAnimation>
 
-          {/* 통계 카드들 */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-            {stats.map((stat, index) => (
-              <ScrollAnimation key={index}>
-                <div
-                  className="rounded-[20px]"
-                  style={{
-                    backgroundColor: "#1a1a1a",
-                    paddingTop: "50px",
-                    paddingBottom: "50px",
-                    paddingLeft: "32px",
-                    paddingRight: "32px",
-                  }}
-                >
-                  <h5
-                    className="font-medium"
-                    style={{
-                      textAlign: "left",
-                      lineHeight: "1.4",
-                      fontSize: "16px",
-                      color: "rgba(255, 255, 255, 0.5)",
-                      marginBottom: "30px",
-                    }}
-                  >
-                    {stat.label.split("\n").map((line, i) => (
-                      <span key={i}>
-                        {line}
-                        {i < stat.label.split("\n").length - 1 && <br />}
-                      </span>
-                    ))}
-                  </h5>
-                  <h3
-                    className="font-bold"
-                    style={{
-                      fontSize: "48px",
-                      color: "rgb(255, 255, 255)",
-                      textAlign: "left",
-                      margin: "0px",
-                      lineHeight: "1",
-                    }}
-                  >
-                    {stat.value}
-                  </h3>
-                </div>
-              </ScrollAnimation>
-            ))}
-          </div>
-
-          {/* 더 알아보기 버튼 */}
-          <ScrollAnimation>
-            <div
-              className="text-center"
-              style={{ marginTop: "40px", paddingBottom: "100px" }}
-            >
-              <a
-                href="#service"
-                className="inline-block px-6 py-3 rounded-full font-normal transition-all duration-300 border border-white"
+        {/* 통계 카드들 */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+          {stats.map((stat, index) => (
+            <ScrollAnimation key={index}>
+              <div
+                className="rounded-[20px]"
                 style={{
-                  backgroundColor: "transparent",
-                  color: "rgb(255, 255, 255)",
-                  fontSize: "13px",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = "white";
-                  e.currentTarget.style.color = "black";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = "transparent";
-                  e.currentTarget.style.color = "white";
+                  backgroundColor: "#1a1a1a",
+                  paddingTop: "50px",
+                  paddingBottom: "50px",
+                  paddingLeft: "32px",
+                  paddingRight: "32px",
                 }}
               >
-                더 알아보기
-              </a>
-            </div>
-          </ScrollAnimation>
+                <h5
+                  className="font-medium"
+                  style={{
+                    textAlign: "left",
+                    lineHeight: "1.4",
+                    fontSize: "16px",
+                    color: "rgba(255, 255, 255, 0.5)",
+                    marginBottom: "30px",
+                  }}
+                >
+                  {stat.label.split("\n").map((line, i) => (
+                    <span key={i}>
+                      {line}
+                      {i < stat.label.split("\n").length - 1 && <br />}
+                    </span>
+                  ))}
+                </h5>
+                <h3
+                  className="font-bold"
+                  style={{
+                    fontSize: "48px",
+                    color: "rgb(255, 255, 255)",
+                    textAlign: "left",
+                    margin: "0px",
+                    lineHeight: "1",
+                  }}
+                >
+                  {stat.value}
+                </h3>
+              </div>
+            </ScrollAnimation>
+          ))}
+        </div>
+
+        {/* 더 알아보기 버튼 */}
+        <ScrollAnimation delay={300}>
+          <div
+            className="text-center"
+            style={{ marginTop: "40px", paddingBottom: "100px" }}
+          >
+            <a
+              href="#service"
+              className="inline-block px-6 py-3 rounded-full font-normal transition-all duration-300 border border-white"
+              style={{
+                backgroundColor: "transparent",
+                color: "rgb(255, 255, 255)",
+                fontSize: "13px",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = "white";
+                e.currentTarget.style.color = "black";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = "transparent";
+                e.currentTarget.style.color = "white";
+              }}
+            >
+              더 알아보기
+            </a>
+          </div>
         </ScrollAnimation>
       </div>
     </section>
