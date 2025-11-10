@@ -28,8 +28,9 @@ export default function Header() {
         style={{ paddingLeft: "40px", paddingRight: "40px" }}
       >
         {/* 로고 이미지 */}
-        <div
-          className="flex items-center"
+        <a
+          href="#home"
+          className="flex items-center cursor-pointer"
           style={{ width: "120px", height: "32px" }}
         >
           <Image
@@ -41,12 +42,12 @@ export default function Header() {
             priority
             style={{ objectFit: "contain" }}
           />
-        </div>
+        </a>
 
         {/* Desktop Menu */}
         <nav className="hidden md:flex items-center space-x-8">
           <a
-            href="#yogitsu"
+            href="#home"
             className="text-white font-normal tracking-tight transition-colors duration-200"
             onMouseEnter={(e) =>
               (e.currentTarget.style.color = "rgba(255, 255, 255, 0.9)")
@@ -110,17 +111,19 @@ export default function Header() {
             다운로드
           </a>
 
-          <button
+          <a
+            href="#download"
             className={`
               ${
                 isScrolled ? "bg-blue-500 text-white" : "bg-white text-blue-500"
               }
               px-5.5 py-3.5 rounded-full font-normal text-xs
               hover:bg-opacity-90 transition-all duration-300 shadow-md
+              inline-block
             `}
           >
             앱 다운로드
-          </button>
+          </a>
         </nav>
 
         {/* Mobile Menu Button */}
