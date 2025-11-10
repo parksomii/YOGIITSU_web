@@ -21,6 +21,8 @@ export default function ScrollAnimation({
           setTimeout(() => {
             setIsVisible(true);
           }, delay);
+        } else {
+          setIsVisible(false);
         }
       },
       { threshold: 0.1 }
@@ -40,7 +42,12 @@ export default function ScrollAnimation({
   return (
     <div
       ref={ref}
-      className={`fade-in-on-scroll ${isVisible ? "visible" : ""}`}
+      className={`slide-up-on-scroll ${isVisible ? "visible" : ""}`}
+      style={{
+        transition: `opacity 0.8s ease-out ${delay}ms, transform 0.8s ease-out ${delay}ms`,
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible ? "translateY(0)" : "translateY(40px)",
+      }}
     >
       {children}
     </div>
