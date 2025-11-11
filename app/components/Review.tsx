@@ -1,68 +1,28 @@
 "use client";
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import ScrollAnimation from "./ScrollAnimation";
 
 interface ReviewData {
+  id?: number;
   title: string;
   content: string;
   department: string;
   studentId: string;
   name: string;
+  createdAt?: string;
 }
 
-export default function Review() {
-  const [reviews, setReviews] = useState<ReviewData[]>([
-    {
-      title: "시간 절약에 도움돼요!",
-      content:
-        "급하게 학과 사무실 전화해야 했는데 예전처럼 학교 홈페이지 헤매지 않고 요기있수에서 바로 찾았어요. 단과대별 연락처랑 위치까지 깔끔하게 정리되어 있어서 편리했습니다!",
-      department: "경영학과",
-      studentId: "23학번",
-      name: "이00",
-    },
-    {
-      title: "셔틀버스 타고 지각 안 했어요!",
-      content:
-        "셔틀버스 탑승 위치도 제대로 모르고 셔틀버스 시간표도 몰랐는데 요기있수에서 확인하고 무사히 셔틀 버스 탔어요!  덕분에 지각하지 않고 강의실까지 갔던 기억이 나네요.",
-      department: "간호학과",
-      studentId: "24학번",
-      name: "박00",
-    },
-    {
-      title: "학식 메뉴 제공 너무 좋아요",
-      content:
-        '친구들끼리 "오늘 학식 뭐냐?" 물어볼 필요가 없어졌어요. 오늘의 메뉴와 가격 바로 뜨니까 비교해서 고르기 너무 좋았어요! 특히 밥 먹으러 멀리 가기 전에 메뉴 확인하고 가는 게 제일 만족스러워요.',
-      department: "컴퓨터SW학과",
-      studentId: "21학번",
-      name: "박00",
-    },
-    {
-      title: "지름길 정보, 진짜 꿀팁이에요!",
-      content:
-        "캠퍼스 너무 넓어서 지름길을 너무 원했는데 지름길 정보 제공 기능 진짜 꿀팁이에요. 사진으로 단계별 안내해 줘서 따라가기만 하면 되니까 길 잃을 걱정 없었어요!",
-      department: "정보보호학과",
-      studentId: "24학번",
-      name: "최00",
-    },
-    {
-      title: "시설 정보 찾기 너무 편해졌어요!",
-      content:
-        "프린터기부터 카페까지 모든 편의시설 정보를 지도에서 바로 확인하고 갈 수 있어서 시간이 확실히 절약됩니다. 층별 안내 도식도까지 있어서 잘 찾아갈 수 있었어요!",
-      department: "컴퓨터SW학과",
-      studentId: "22학번",
-      name: "김00",
-    },
-    {
-      title: "학교 정보 찾기 진짜 한 번에 끝!",
-      content:
-        "학과 사무실 위치나 전화번호까지 모두 정리되어 있어서 너무 편해요! 예전에는 일일이 검색했는데 요기있수 앱에서 바로 볼 수 있어서 시간 엄청 절약돼요! 너무 좋습니다!",
-      department: "운동건강관리학과",
-      studentId: "23학번",
-      name: "한00",
-    },
-  ]);
+// API 베이스 URL 설정
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://dev.yogiitsu.app";
 
+export default function Review() {
+  const [reviews, setReviews] = useState<ReviewData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const [formData, setFormData] = useState<ReviewData>({
     title: "",
     content: "",
@@ -70,6 +30,31 @@ export default function Review() {
     studentId: "",
     name: "",
   });
+
+  // 리뷰 목록 불러오기
+  useEffect(() => {
+    fetchReviews();
+  }, []);
+
+  const fetchReviews = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+      const response = await fetch(`${API_BASE_URL}/reviews`);
+
+      if (!response.ok) {
+        throw new Error("리뷰를 불러오는데 실패했습니다");
+      }
+
+      const data = await response.json();
+      setReviews(data);
+    } catch (err) {
+      console.error("Error fetching reviews:", err);
+      setError("리뷰를 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -81,16 +66,43 @@ export default function Review() {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (
-      formData.title &&
-      formData.content &&
-      formData.department &&
-      formData.studentId &&
-      formData.name
+      !formData.title ||
+      !formData.content ||
+      !formData.department ||
+      !formData.studentId ||
+      !formData.name
     ) {
-      setReviews((prev) => [...prev, formData]);
+      alert("모든 항목을 입력해주세요.");
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+      setError(null);
+
+      const response = await fetch(`${API_BASE_URL}/reviews`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "리뷰 작성에 실패했습니다");
+      }
+
+      const newReview = await response.json();
+
+      // 리뷰 목록 다시 불러오기
+      await fetchReviews();
+
+      // 폼 초기화 및 모달 닫기
       setFormData({
         title: "",
         content: "",
@@ -99,6 +111,18 @@ export default function Review() {
         name: "",
       });
       setIsModalOpen(false);
+
+      alert("리뷰가 성공적으로 작성되었습니다!");
+    } catch (err) {
+      console.error("Error submitting review:", err);
+      setError(err instanceof Error ? err.message : "리뷰 작성에 실패했습니다");
+      alert(
+        err instanceof Error
+          ? err.message
+          : "리뷰 작성에 실패했습니다. 잠시 후 다시 시도해주세요."
+      );
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -111,22 +135,73 @@ export default function Review() {
       studentId: "",
       name: "",
     });
+    setError(null);
   };
 
+  if (isLoading) {
+    return (
+      <section
+        id="review"
+        className="text-black"
+        style={{
+          backgroundColor: "#f5f5f5",
+          paddingTop: "120px",
+          paddingBottom: "120px",
+        }}
+      >
+        <div
+          className="max-w-[1180px] mx-auto text-center"
+          style={{ paddingLeft: "20px", paddingRight: "20px" }}
+        >
+          <p style={{ fontSize: "18px", color: "#666" }}>리뷰를 불러오는 중...</p>
+        </div>
+      </section>
+    );
+  }
+
   return (
-    <section
-      id="review"
-      className="text-black"
-      style={{
-        backgroundColor: "#f5f5f5",
-        paddingTop: "120px",
-        paddingBottom: "120px",
-      }}
-    >
+    <>
+      <style>{`
+        @keyframes bounce {
+          from { 
+            transform: translateY(0);
+          }
+          to { 
+            transform: translateY(-12px);
+          }
+        }
+
+        .animate-bounce {
+          animation: bounce 1.2s ease-in-out 1s infinite alternate;
+        }
+      `}</style>
+      <section
+        id="review"
+        className="text-black"
+        style={{
+          backgroundColor: "#f5f5f5",
+          paddingTop: "120px",
+          paddingBottom: "120px",
+        }}
+      >
       <div
         className="max-w-[1180px] mx-auto"
         style={{ paddingLeft: "20px", paddingRight: "20px" }}
       >
+        {error && (
+          <div
+            style={{
+              backgroundColor: "#fee",
+              color: "#c33",
+              padding: "16px",
+              borderRadius: "8px",
+              marginBottom: "20px",
+            }}
+          >
+            {error}
+          </div>
+        )}
+
         <ScrollAnimation>
           {/* User Review 라벨 */}
           <div style={{ marginBottom: "30px" }}>
@@ -147,7 +222,8 @@ export default function Review() {
             style={{
               marginBottom: "80px",
               display: "flex",
-              alignItems: "center",
+              alignItems: "flex-start",
+              justifyContent: "space-between",
               gap: "20px",
               flexWrap: "wrap",
             }}
@@ -168,7 +244,7 @@ export default function Review() {
             </h2>
             <button
               onClick={() => setIsModalOpen(true)}
-              className="flex items-center gap-2 transition-all duration-300 hover:scale-105"
+              className="flex items-center gap-2 transition-all duration-300 hover:scale-105 animate-bounce"
               style={{
                 backgroundColor: "#3b82f6",
                 color: "white",
@@ -179,6 +255,8 @@ export default function Review() {
                 fontWeight: "600",
                 cursor: "pointer",
                 boxShadow: "0 4px 6px rgba(59, 130, 246, 0.3)",
+                alignSelf: "flex-start",
+                lineHeight: "1.2",
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.backgroundColor = "#2563eb";
@@ -191,79 +269,94 @@ export default function Review() {
                   "0 4px 6px rgba(59, 130, 246, 0.3)";
               }}
             >
-              <span style={{ fontSize: "20px" }}>✏️</span>
+              <span style={{ fontSize: "20px" }}></span>
               나도 한 마디 하기
             </button>
           </div>
         </ScrollAnimation>
 
         {/* 리뷰 카드들 */}
-        <div
-          className="grid grid-cols-1 md:grid-cols-3 gap-6"
-          style={{ marginBottom: "40px" }}
-        >
-          {reviews.map((review, index) => (
-            <ScrollAnimation
-              key={`${review.title}-${review.name}-${index}`}
-              delay={index * 100}
-            >
-              <div
-                className="rounded-[20px] transition-all duration-300 cursor-pointer"
-                style={{
-                  backgroundColor: "white",
-                  padding: "32px",
-                  border: "1px solid #e0e0e0",
-                  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.05)",
-                  transform: "translateY(0)",
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.boxShadow =
-                    "0 12px 24px rgba(0, 0, 0, 0.15)";
-                  e.currentTarget.style.transform = "translateY(-8px)";
-                  e.currentTarget.style.borderColor = "#e0e0e0";
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.boxShadow =
-                    "0 4px 6px rgba(0, 0, 0, 0.05)";
-                  e.currentTarget.style.transform = "translateY(0)";
-                  e.currentTarget.style.borderColor = "#e0e0e0";
-                }}
+        {reviews.length === 0 ? (
+          <div
+            style={{
+              textAlign: "center",
+              padding: "60px 20px",
+              color: "#666",
+            }}
+          >
+            <p style={{ fontSize: "18px" }}>아직 작성된 리뷰가 없습니다.</p>
+            <p style={{ fontSize: "14px", marginTop: "8px" }}>
+              첫 번째 리뷰를 작성해보세요!
+            </p>
+          </div>
+        ) : (
+          <div
+            className="grid grid-cols-1 md:grid-cols-3 gap-6"
+            style={{ marginBottom: "40px" }}
+          >
+            {reviews.map((review, index) => (
+              <ScrollAnimation
+                key={review.id || `${review.title}-${review.name}-${index}`}
+                delay={index * 100}
               >
-                <h3
-                  className="font-bold"
+                <div
+                  className="rounded-[20px] transition-all duration-300 cursor-pointer"
                   style={{
-                    fontSize: "20px",
-                    color: "rgb(0, 0, 0)",
-                    lineHeight: "1.4",
-                    marginBottom: "16px",
+                    backgroundColor: "white",
+                    padding: "32px",
+                    border: "1px solid #e0e0e0",
+                    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.05)",
+                    transform: "translateY(0)",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.boxShadow =
+                      "0 12px 24px rgba(0, 0, 0, 0.15)";
+                    e.currentTarget.style.transform = "translateY(-8px)";
+                    e.currentTarget.style.borderColor = "#e0e0e0";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.boxShadow =
+                      "0 4px 6px rgba(0, 0, 0, 0.05)";
+                    e.currentTarget.style.transform = "translateY(0)";
+                    e.currentTarget.style.borderColor = "#e0e0e0";
                   }}
                 >
-                  {review.title}
-                </h3>
-                <p
-                  style={{
-                    fontSize: "14px",
-                    color: "rgba(0, 0, 0, 0.6)",
-                    lineHeight: "1.6",
-                    marginBottom: "24px",
-                  }}
-                >
-                  {review.content}
-                </p>
-                {/* 작성자 정보 */}
-                <p
-                  style={{
-                    fontSize: "14px",
-                    color: "rgba(0, 0, 0, 0.3)",
-                    lineHeight: "1.5",
-                  }}
-                >
-                  {review.department}, {review.studentId} {review.name}
-                </p>
-              </div>
-            </ScrollAnimation>
-          ))}
-        </div>
+                  <h3
+                    className="font-bold"
+                    style={{
+                      fontSize: "20px",
+                      color: "rgb(0, 0, 0)",
+                      lineHeight: "1.4",
+                      marginBottom: "16px",
+                    }}
+                  >
+                    {review.title}
+                  </h3>
+                  <p
+                    style={{
+                      fontSize: "14px",
+                      color: "rgba(0, 0, 0, 0.6)",
+                      lineHeight: "1.6",
+                      marginBottom: "24px",
+                    }}
+                  >
+                    {review.content}
+                  </p>
+                  {/* 작성자 정보 */}
+                  <p
+                    style={{
+                      fontSize: "14px",
+                      color: "rgba(0, 0, 0, 0.3)",
+                      lineHeight: "1.5",
+                    }}
+                  >
+                    {review.department}, {review.studentId} {review.name}
+                  </p>
+                </div>
+              </ScrollAnimation>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* 리뷰 작성 모달 */}
@@ -317,11 +410,12 @@ export default function Review() {
               </h3>
               <button
                 onClick={handleCloseModal}
+                disabled={isSubmitting}
                 style={{
                   backgroundColor: "transparent",
                   border: "none",
                   fontSize: "24px",
-                  cursor: "pointer",
+                  cursor: isSubmitting ? "not-allowed" : "pointer",
                   color: "rgba(0, 0, 0, 0.5)",
                   padding: "0",
                   width: "32px",
@@ -333,8 +427,10 @@ export default function Review() {
                   transition: "all 0.2s",
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = "#f0f0f0";
-                  e.currentTarget.style.color = "rgb(0, 0, 0)";
+                  if (!isSubmitting) {
+                    e.currentTarget.style.backgroundColor = "#f0f0f0";
+                    e.currentTarget.style.color = "rgb(0, 0, 0)";
+                  }
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.backgroundColor = "transparent";
@@ -364,6 +460,7 @@ export default function Review() {
                   value={formData.title}
                   onChange={handleInputChange}
                   required
+                  disabled={isSubmitting}
                   style={{
                     width: "100%",
                     padding: "12px 16px",
@@ -372,14 +469,18 @@ export default function Review() {
                     fontSize: "16px",
                     outline: "none",
                     transition: "border-color 0.2s",
+                    opacity: isSubmitting ? 0.6 : 1,
+                    cursor: isSubmitting ? "not-allowed" : "text",
                   }}
                   onFocus={(e) => {
-                    e.currentTarget.style.borderColor = "#3b82f6";
+                    if (!isSubmitting) {
+                      e.currentTarget.style.borderColor = "#3b82f6";
+                    }
                   }}
                   onBlur={(e) => {
                     e.currentTarget.style.borderColor = "#e0e0e0";
                   }}
-                  placeholder="리뷰 제목을 입력하세요"
+                  placeholder="제목을 입력하세요"
                 />
               </div>
 
@@ -400,6 +501,7 @@ export default function Review() {
                   value={formData.content}
                   onChange={handleInputChange}
                   required
+                  disabled={isSubmitting}
                   rows={6}
                   style={{
                     width: "100%",
@@ -411,14 +513,18 @@ export default function Review() {
                     resize: "vertical",
                     fontFamily: "inherit",
                     transition: "border-color 0.2s",
+                    opacity: isSubmitting ? 0.6 : 1,
+                    cursor: isSubmitting ? "not-allowed" : "text",
                   }}
                   onFocus={(e) => {
-                    e.currentTarget.style.borderColor = "#3b82f6";
+                    if (!isSubmitting) {
+                      e.currentTarget.style.borderColor = "#3b82f6";
+                    }
                   }}
                   onBlur={(e) => {
                     e.currentTarget.style.borderColor = "#e0e0e0";
                   }}
-                  placeholder="리뷰 내용을 입력하세요"
+                  placeholder="내용을 입력하세요"
                 />
               </div>
 
@@ -440,6 +546,7 @@ export default function Review() {
                   value={formData.department}
                   onChange={handleInputChange}
                   required
+                  disabled={isSubmitting}
                   style={{
                     width: "100%",
                     padding: "12px 16px",
@@ -448,9 +555,13 @@ export default function Review() {
                     fontSize: "16px",
                     outline: "none",
                     transition: "border-color 0.2s",
+                    opacity: isSubmitting ? 0.6 : 1,
+                    cursor: isSubmitting ? "not-allowed" : "text",
                   }}
                   onFocus={(e) => {
-                    e.currentTarget.style.borderColor = "#3b82f6";
+                    if (!isSubmitting) {
+                      e.currentTarget.style.borderColor = "#3b82f6";
+                    }
                   }}
                   onBlur={(e) => {
                     e.currentTarget.style.borderColor = "#e0e0e0";
@@ -477,6 +588,7 @@ export default function Review() {
                   value={formData.studentId}
                   onChange={handleInputChange}
                   required
+                  disabled={isSubmitting}
                   style={{
                     width: "100%",
                     padding: "12px 16px",
@@ -485,9 +597,13 @@ export default function Review() {
                     fontSize: "16px",
                     outline: "none",
                     transition: "border-color 0.2s",
+                    opacity: isSubmitting ? 0.6 : 1,
+                    cursor: isSubmitting ? "not-allowed" : "text",
                   }}
                   onFocus={(e) => {
-                    e.currentTarget.style.borderColor = "#3b82f6";
+                    if (!isSubmitting) {
+                      e.currentTarget.style.borderColor = "#3b82f6";
+                    }
                   }}
                   onBlur={(e) => {
                     e.currentTarget.style.borderColor = "#e0e0e0";
@@ -514,6 +630,7 @@ export default function Review() {
                   value={formData.name}
                   onChange={handleInputChange}
                   required
+                  disabled={isSubmitting}
                   style={{
                     width: "100%",
                     padding: "12px 16px",
@@ -522,9 +639,13 @@ export default function Review() {
                     fontSize: "16px",
                     outline: "none",
                     transition: "border-color 0.2s",
+                    opacity: isSubmitting ? 0.6 : 1,
+                    cursor: isSubmitting ? "not-allowed" : "text",
                   }}
                   onFocus={(e) => {
-                    e.currentTarget.style.borderColor = "#3b82f6";
+                    if (!isSubmitting) {
+                      e.currentTarget.style.borderColor = "#3b82f6";
+                    }
                   }}
                   onBlur={(e) => {
                     e.currentTarget.style.borderColor = "#e0e0e0";
@@ -543,6 +664,7 @@ export default function Review() {
                 <button
                   type="button"
                   onClick={handleCloseModal}
+                  disabled={isSubmitting}
                   style={{
                     padding: "12px 24px",
                     borderRadius: "8px",
@@ -551,11 +673,14 @@ export default function Review() {
                     color: "rgb(0, 0, 0)",
                     fontSize: "16px",
                     fontWeight: "600",
-                    cursor: "pointer",
+                    cursor: isSubmitting ? "not-allowed" : "pointer",
                     transition: "all 0.2s",
+                    opacity: isSubmitting ? 0.5 : 1,
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = "#f5f5f5";
+                    if (!isSubmitting) {
+                      e.currentTarget.style.backgroundColor = "#f5f5f5";
+                    }
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.backgroundColor = "white";
@@ -565,6 +690,7 @@ export default function Review() {
                 </button>
                 <button
                   type="submit"
+                  disabled={isSubmitting}
                   style={{
                     padding: "12px 24px",
                     borderRadius: "8px",
@@ -573,14 +699,17 @@ export default function Review() {
                     color: "white",
                     fontSize: "16px",
                     fontWeight: "600",
-                    cursor: "pointer",
+                    cursor: isSubmitting ? "not-allowed" : "pointer",
                     transition: "all 0.2s",
                     boxShadow: "0 4px 6px rgba(59, 130, 246, 0.3)",
+                    opacity: isSubmitting ? 0.5 : 1,
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = "#2563eb";
-                    e.currentTarget.style.boxShadow =
-                      "0 6px 12px rgba(59, 130, 246, 0.4)";
+                    if (!isSubmitting) {
+                      e.currentTarget.style.backgroundColor = "#2563eb";
+                      e.currentTarget.style.boxShadow =
+                        "0 6px 12px rgba(59, 130, 246, 0.4)";
+                    }
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.backgroundColor = "#3b82f6";
@@ -588,7 +717,7 @@ export default function Review() {
                       "0 4px 6px rgba(59, 130, 246, 0.3)";
                   }}
                 >
-                  저장하기
+                  {isSubmitting ? "저장 중..." : "저장하기"}
                 </button>
               </div>
             </form>
@@ -596,5 +725,6 @@ export default function Review() {
         </div>
       )}
     </section>
+    </>
   );
 }
