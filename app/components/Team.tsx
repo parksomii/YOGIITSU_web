@@ -84,7 +84,7 @@ export default function Team() {
                 lineHeight: "1.2",
               }}
             >
-              요기있수 팀 소개
+              <span style={{ color: "#3b82f6" }}>요기있수</span> 팀 소개
             </h2>
           </div>
         </ScrollAnimation>

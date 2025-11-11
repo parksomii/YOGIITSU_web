@@ -79,7 +79,9 @@ export default function About() {
                 lineHeight: "1.2",
               }}
             >
-              캠퍼스 라이프의 변화, 요기있수가 만들어갑니다
+              캠퍼스 라이프의 변화,
+              <br className="md:hidden" />
+              <span style={{ color: "#3b82f6" }}> 요기있수</span>가 만들어갑니다
             </h2>
           </div>
         </ScrollAnimation>
