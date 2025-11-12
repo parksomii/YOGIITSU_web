@@ -19,6 +19,9 @@ export default function ReviewCard({ review, index }: ReviewCardProps) {
           border: "1px solid #e0e0e0",
           boxShadow: "0 4px 6px rgba(0, 0, 0, 0.05)",
           transform: "translateY(0)",
+          height: "290px",
+          display: "flex",
+          flexDirection: "column",
         }}
         onMouseEnter={(e) => {
           e.currentTarget.style.boxShadow = "0 12px 24px rgba(0, 0, 0, 0.15)";
@@ -38,26 +41,36 @@ export default function ReviewCard({ review, index }: ReviewCardProps) {
             color: "rgb(0, 0, 0)",
             lineHeight: "1.4",
             marginBottom: "16px",
+            flexShrink: 0,
           }}
         >
           {review.title}
         </h3>
-        <p
+        <div
           style={{
-            fontSize: "14px",
-            color: "rgba(0, 0, 0, 0.6)",
-            lineHeight: "1.6",
+            flex: 1,
+            overflowY: "auto",
             marginBottom: "24px",
+            minHeight: 0,
           }}
         >
-          {review.content}
-        </p>
+          <p
+            style={{
+              fontSize: "14px",
+              color: "rgba(0, 0, 0, 0.6)",
+              lineHeight: "1.6",
+            }}
+          >
+            {review.content}
+          </p>
+        </div>
         {/* 작성자 정보 */}
         <p
           style={{
             fontSize: "14px",
             color: "rgba(0, 0, 0, 0.3)",
             lineHeight: "1.5",
+            flexShrink: 0,
           }}
         >
           {review.department}, {review.studentId} {review.name}
