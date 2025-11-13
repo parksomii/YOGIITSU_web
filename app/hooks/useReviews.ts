@@ -2,8 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { ReviewData } from "../types/review";
-
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://dev.yogiitsu.app";
+import { API_BASE_URL } from "../config/api";
 
 export const useReviews = () => {
   const [reviews, setReviews] = useState<ReviewData[]>([]);

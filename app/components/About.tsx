@@ -1,27 +1,15 @@
 "use client";
 import ScrollAnimation from "./ScrollAnimation";
-
-// 날짜 계산 함수들
-const calculateDaysSince = (startDate: string) => {
-  const start = new Date(startDate);
-  const now = new Date();
-  const diffTime = Math.abs(now.getTime() - start.getTime());
-  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-  return `${diffDays}일+`;
-};
-
-const calculateMonthsSince = (startDate: string) => {
-  const start = new Date(startDate);
-  const now = new Date(); // 월 차이 계산 로직
-  const diffMonths =
-    (now.getFullYear() - start.getFullYear()) * 12 +
-    (now.getMonth() - start.getMonth());
-  return `${diffMonths}개월+`;
-};
+import { useMemberCount } from "../hooks/useMemberCount";
+import {
+  calculateDaysSince,
+  calculateMonthsSince,
+} from "../utils/dateCalculations";
 
 export default function About() {
   const yogitsuDays = calculateDaysSince("2025-08-26");
   const projectMonths = calculateMonthsSince("2025-01-10");
+  const { memberCount } = useMemberCount();
 
   const stats = [
     {
@@ -29,8 +17,8 @@ export default function About() {
       value: yogitsuDays,
     },
     {
-      label: "요기있수\n앱 다운로드 수",
-      value: "150+",
+      label: "요기있수와 \n함께하는 인원",
+      value: memberCount,
     },
     {
       label: "프로젝트 기간",
