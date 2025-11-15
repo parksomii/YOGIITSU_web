@@ -90,7 +90,7 @@ export default function Team() {
         </ScrollAnimation>
 
         {/* 팀원 카드들 */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-6" style={{ width: "100%", minWidth: 0 }}>
           {teamMembers.map((member, index) => (
             <ScrollAnimation key={index} delay={index * 100}>
               <div
@@ -100,6 +100,8 @@ export default function Team() {
                   border: "1px solid #e0e0e0",
                   boxShadow: "0 4px 6px rgba(0, 0, 0, 0.05)",
                   transform: "translateY(0)",
+                  minWidth: 0,
+                  width: "100%",
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.boxShadow =
@@ -115,10 +117,10 @@ export default function Team() {
                 }}
               >
                 {/* 역할 태그 */}
-                <div style={{ padding: "20px 24px 0 24px" }}>
+                <div style={{ padding: "20px clamp(12px, 2vw, 24px) 0 clamp(12px, 2vw, 24px)" }}>
                   <p
                     style={{
-                      fontSize: "14px",
+                      fontSize: "clamp(11px, 1.2vw, 14px)",
                       lineHeight: "1",
                       fontWeight: "600",
                     }}
@@ -148,18 +150,23 @@ export default function Team() {
                   <img
                     src={member.image}
                     alt={member.name}
-                    style={{ width: "145px", height: "auto" }}
+                    style={{ width: "clamp(100px, 12vw, 145px)", height: "auto", maxWidth: "100%" }}
                   />
                 </div>
 
                 {/* 텍스트 영역 */}
                 <div
-                  style={{ padding: "0 24px 32px 24px", textAlign: "center" }}
+                  style={{ 
+                    padding: `0 clamp(12px, 2vw, 24px) 32px clamp(12px, 2vw, 24px)`, 
+                    textAlign: "center",
+                    minWidth: 0,
+                    width: "100%",
+                  }}
                 >
                   <h3
                     className="font-bold"
                     style={{
-                      fontSize: "30px",
+                      fontSize: "clamp(20px, 2.5vw, 30px)",
                       color: "rgb(109, 109, 109)",
                       lineHeight: "1",
                       marginTop: "35px",
@@ -170,10 +177,12 @@ export default function Team() {
                   </h3>
                   <p
                     style={{
-                      fontSize: "14px",
+                      fontSize: "clamp(7px, 1vw, 14px)",
                       color: "rgba(0, 0, 0, 0.5)",
                       lineHeight: "1.5",
                       marginBottom: "24px",
+                      whiteSpace: "nowrap",
+                      maxWidth: "100%",
                     }}
                   >
                     {member.email}
@@ -184,12 +193,13 @@ export default function Team() {
                     href={member.github}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="px-6 py-2 rounded-full font-normal transition-all duration-300 inline-block"
+                    className="rounded-full font-normal transition-all duration-300 inline-block"
                     style={{
                       border: "1px solid #d0d0d0",
                       backgroundColor: "transparent",
                       color: "rgb(0, 0, 0)",
-                      fontSize: "14px",
+                      fontSize: "clamp(11px, 1.2vw, 14px)",
+                      padding: "clamp(6px, 0.8vw, 8px) clamp(16px, 2vw, 24px)",
                       textDecoration: "none",
                       cursor: "pointer",
                     }}
