@@ -6,11 +6,19 @@ import { ReviewData } from "../types/review";
 interface ReviewCardProps {
   review: ReviewData;
   index: number;
+  onClick?: () => void;
 }
 
-export default function ReviewCard({ review, index }: ReviewCardProps) {
+export default function ReviewCard({
+  review,
+  index,
+  onClick,
+}: ReviewCardProps) {
   return (
-    <ScrollAnimation key={review.id || `${review.title}-${review.name}-${index}`} delay={index * 100}>
+    <ScrollAnimation
+      key={review.id || `${review.title}-${review.name}-${index}`}
+      delay={index * 100}
+    >
       <div
         className="rounded-[20px] transition-all duration-300 cursor-pointer"
         style={{
@@ -23,6 +31,7 @@ export default function ReviewCard({ review, index }: ReviewCardProps) {
           display: "flex",
           flexDirection: "column",
         }}
+        onClick={onClick}
         onMouseEnter={(e) => {
           e.currentTarget.style.boxShadow = "0 12px 24px rgba(0, 0, 0, 0.15)";
           e.currentTarget.style.transform = "translateY(-8px)";
