@@ -13,10 +13,18 @@ export default function Review() {
   const [modalKey, setModalKey] = useState(0);
   const [selectedReview, setSelectedReview] = useState<ReviewData | null>(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
   // 훅에서 데이터 및 로직 가져오기
-  const { reviews, isLoading, isSubmitting, error, submitReview } =
-    useReviews();
+  const {
+    reviews,
+    pagination,
+    isLoading,
+    isInitialLoading,
+    isSubmitting,
+    error,
+    submitReview,
+  } = useReviews(currentPage);
 
   const handleOpenModal = () => {
     setModalKey((prev) => prev + 1); // 모달이 열릴 때마다 새로운 키 생성
@@ -31,6 +39,8 @@ export default function Review() {
     if (result.success) {
       // 폼 제출 후 모달 닫기
       setIsModalOpen(false);
+      // 첫 페이지로 이동하여 새 리뷰 확인
+      setCurrentPage(1);
       alert("리뷰가 성공적으로 작성되었습니다!");
     } else {
       // 에러 메시지는 훅에서 이미 설정됨
@@ -40,28 +50,14 @@ export default function Review() {
     }
   };
 
-  if (isLoading) {
-    return (
-      <section
-        id="review"
-        className="text-black"
-        style={{
-          backgroundColor: "#f5f5f5",
-          paddingTop: "120px",
-          paddingBottom: "120px",
-        }}
-      >
-        <div
-          className="max-w-[1180px] mx-auto text-center"
-          style={{ paddingLeft: "20px", paddingRight: "20px" }}
-        >
-          <p style={{ fontSize: "18px", color: "#666" }}>
-            리뷰를 불러오는 중...
-          </p>
-        </div>
-      </section>
-    );
-  }
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+    // 페이지 변경 시 스크롤을 리뷰 섹션 상단으로 이동
+    const reviewSection = document.getElementById("review");
+    if (reviewSection) {
+      reviewSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
 
   return (
     <>
@@ -72,6 +68,15 @@ export default function Review() {
           }
           to { 
             transform: translateY(-12px);
+          }
+        }
+
+        @keyframes pulse {
+          0%, 100% {
+            opacity: 1;
+          }
+          50% {
+            opacity: 0.5;
           }
         }
 
@@ -180,7 +185,29 @@ export default function Review() {
           </ScrollAnimation>
 
           {/* 리뷰 카드들 */}
-          {reviews.length === 0 ? (
+          {isInitialLoading ? (
+            <div
+              className="grid grid-cols-1 md:grid-cols-3 gap-6"
+              style={{
+                marginBottom: "40px",
+                opacity: 0.3,
+                transition: "opacity 0.2s ease-in-out",
+              }}
+            >
+              {/* 스켈레톤 로딩 */}
+              {Array.from({ length: 6 }).map((_, index) => (
+                <div
+                  key={index}
+                  style={{
+                    backgroundColor: "#e0e0e0",
+                    borderRadius: "12px",
+                    height: "300px",
+                    animation: "pulse 1.5s ease-in-out infinite",
+                  }}
+                />
+              ))}
+            </div>
+          ) : reviews.length === 0 ? (
             <div
               style={{
                 textAlign: "center",
@@ -194,22 +221,88 @@ export default function Review() {
               </p>
             </div>
           ) : (
-            <div
-              className="grid grid-cols-1 md:grid-cols-3 gap-6"
-              style={{ marginBottom: "40px" }}
-            >
-              {reviews.map((review, index) => (
-                <ReviewCard
-                  key={review.id || `${review.title}-${review.name}-${index}`}
-                  review={review}
-                  index={index}
-                  onClick={() => {
-                    setSelectedReview(review);
-                    setIsDetailModalOpen(true);
+            <>
+              <div
+                className="grid grid-cols-1 md:grid-cols-3 gap-6"
+                style={{
+                  marginBottom: "40px",
+                  opacity: isLoading ? 0.5 : 1,
+                  transition: "opacity 0.2s ease-in-out",
+                  minHeight: isLoading ? "400px" : "auto",
+                }}
+              >
+                {reviews.map((review, index) => (
+                  <ReviewCard
+                    key={review.id || `${review.title}-${review.name}-${index}`}
+                    review={review}
+                    index={index}
+                    onClick={() => {
+                      setSelectedReview(review);
+                      setIsDetailModalOpen(true);
+                    }}
+                  />
+                ))}
+              </div>
+
+              {/* 페이지네이션 */}
+              {pagination.totalPages > 1 && (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: "8px",
+                    marginTop: "40px",
                   }}
-                />
-              ))}
-            </div>
+                >
+                  {Array.from(
+                    { length: pagination.totalPages },
+                    (_, i) => i + 1
+                  ).map((pageNum) => (
+                    <button
+                      key={pageNum}
+                      onClick={() => !isLoading && handlePageChange(pageNum)}
+                      disabled={isLoading}
+                      style={{
+                        padding: "8px 16px",
+                        borderRadius: "8px",
+                        border: "1px solid #ddd",
+                        backgroundColor:
+                          currentPage === pageNum
+                            ? "#3b82f6"
+                            : isLoading
+                            ? "#f5f5f5"
+                            : "white",
+                        color:
+                          currentPage === pageNum
+                            ? "white"
+                            : isLoading
+                            ? "#999"
+                            : "#333",
+                        cursor: isLoading ? "not-allowed" : "pointer",
+                        fontSize: "14px",
+                        fontWeight: currentPage === pageNum ? "600" : "500",
+                        transition: "all 0.2s",
+                        minWidth: "40px",
+                        opacity: isLoading && currentPage !== pageNum ? 0.6 : 1,
+                      }}
+                      onMouseEnter={(e) => {
+                        if (currentPage !== pageNum && !isLoading) {
+                          e.currentTarget.style.backgroundColor = "#f0f0f0";
+                        }
+                      }}
+                      onMouseLeave={(e) => {
+                        if (currentPage !== pageNum && !isLoading) {
+                          e.currentTarget.style.backgroundColor = "white";
+                        }
+                      }}
+                    >
+                      {pageNum}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </>
           )}
         </div>
 
