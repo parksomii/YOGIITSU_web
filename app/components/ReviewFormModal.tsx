@@ -55,9 +55,21 @@ export default function ReviewFormModal({
   };
 
   const handleClose = () => {
-    if (!isSubmitting) {
-      onClose();
+    if (isSubmitting) return;
+
+    const isDirty =
+      formData.title ||
+      formData.content ||
+      formData.department ||
+      formData.studentId ||
+      formData.name;
+
+    if (isDirty) {
+      const ok = confirm("작성 중인 내용이 사라집니다. 정말 닫을까요?");
+      if (!ok) return;
     }
+
+    onClose();
   };
 
   if (!isOpen) return null;
@@ -77,7 +89,6 @@ export default function ReviewFormModal({
         zIndex: 1000,
         padding: "20px",
       }}
-      onClick={handleClose}
     >
       <div
         style={{
